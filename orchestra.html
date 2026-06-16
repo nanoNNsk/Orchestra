@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orchestra — Chat with an AI company</title>
+<style>
+  :root {
+    --bg: #0f1117; --card: #181b24; --line: #272b36;
+    --ink: #e6e8ee; --dim: #9aa0ad; --accent: #7c9cff; --accent2: #57d9a3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+  header { text-align: center; margin-bottom: 8px; }
+  h1 { font-size: 2.6rem; margin: 0 0 6px; letter-spacing: -.02em; }
+  .tag { color: var(--dim); font-size: 1.15rem; font-style: italic; }
+  h2 {
+    font-size: 1.35rem; margin: 44px 0 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  h2 .num { color: var(--accent); font-weight: 700; margin-right: 10px; }
+  p { color: #d3d7e0; }
+  .lead { font-size: 1.1rem; }
+  b, strong { color: #fff; }
+  code {
+    background: #222632; color: var(--accent2); padding: 1px 6px;
+    border-radius: 5px; font-size: .88em;
+    font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 18px 20px; margin: 14px 0;
+  }
+  .grid { display: grid; gap: 14px; }
+  .grid.two { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 620px) { .grid.two { grid-template-columns: 1fr; } }
+  .flow {
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+    gap: 10px; margin: 8px 0;
+  }
+  .node {
+    background: #222a44; border: 1px solid #38406a; color: #cdd6ff;
+    padding: 8px 16px; border-radius: 999px; font-weight: 600; white-space: nowrap;
+  }
+  .node.alt { background: #1f3a30; border-color: #2f6b54; color: #b8f0d8; }
+  .arrow { color: var(--dim); font-size: 1.3rem; }
+  ol.steps { padding-left: 0; counter-reset: s; list-style: none; }
+  ol.steps li {
+    counter-increment: s; position: relative; padding: 6px 0 6px 42px; margin: 0;
+  }
+  ol.steps li::before {
+    content: counter(s); position: absolute; left: 0; top: 6px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #0f1117; font-weight: 700;
+    display: grid; place-items: center; font-size: .85rem;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--accent); font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; }
+  td:first-child { white-space: nowrap; color: #fff; font-weight: 600; }
+  .pill {
+    display: inline-block; background: #222632; border: 1px solid var(--line);
+    color: var(--dim); border-radius: 999px; padding: 2px 11px; font-size: .82rem;
+    margin: 3px 4px 3px 0;
+  }
+  .stat { display: flex; gap: 24px; flex-wrap: wrap; }
+  .stat .n { font-size: 2rem; font-weight: 800; color: var(--accent2); line-height: 1; }
+  .stat .l { color: var(--dim); font-size: .9rem; }
+  .muted { color: var(--dim); font-size: .92rem; }
+  .skip { color: #ff9a8b; }
+  details { margin: 6px 0; }
+  summary { cursor: pointer; font-weight: 600; color: #cdd6ff; }
+  details[open] summary { margin-bottom: 6px; }
+  footer { margin-top: 56px; text-align: center; color: var(--dim); font-size: .9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>🎻 Orchestra</h1>
+    <div class="tag">Chat with an AI company, not a chatbot.</div>
+  </header>
+
+  <p class="lead" style="text-align:center; margin-top:26px;">
+    A team of specialized AI agents that works together like a real company.
+    You talk to one person — the <b>CEO</b> — and the rest of the organization
+    handles the work behind the scenes.
+  </p>
+
+  <div class="card flow">
+    <span class="node">Chairman (you)</span>
+    <span class="arrow">⇄</span>
+    <span class="node">CEO</span>
+    <span class="arrow">▶</span>
+    <span class="node alt">the right department</span>
+  </div>
+  <p class="muted" style="text-align:center">
+    You set the direction. The CEO delegates, collects results, and reports back
+    <b>one consolidated summary</b> — never the internal chatter.
+  </p>
+
+  <h2><span class="num">01</span>Core concepts</h2>
+  <table>
+    <tr><th>Term</th><th>What it is</th></tr>
+    <tr><td>Chairman</td><td>You. The human. The only one the CEO talks to.</td></tr>
+    <tr><td>CEO</td><td>The single entry point. Plans, routes to departments, reports back.</td></tr>
+    <tr><td>Department</td><td>A stable bucket of related expertise. Has one head. Created by the CEO.</td></tr>
+    <tr><td>Head</td><td>Leads a department. Routes work to its roles — and hires new ones.</td></tr>
+    <tr><td>Role</td><td>A specialist = <code>system prompt + skills</code>. Persistent. The unit that gets hired.</td></tr>
+    <tr><td>Skill</td><td>An atomic capability (web search, write code…). Created by <b>humans only</b>.</td></tr>
+  </table>
+  <div class="card">
+    <b>Two things both called “role”</b>
+    <div class="grid two" style="margin-top:10px">
+      <div><b style="color:var(--accent2)">Role definition</b><br>
+        <span class="muted">prompt + skills. Tiny text. Permanent. This is what gets hired.</span></div>
+      <div><b style="color:var(--accent2)">Role memory</b><br>
+        <span class="muted">context it builds doing work. Grows. Loaded only when active.</span></div>
+    </div>
+    <p class="muted" style="margin-bottom:0">500 definitions are cheap — only <i>memory</i> costs, and only for active roles. That’s why the roster can grow without bound.</p>
+  </div>
+
+  <h2><span class="num">02</span>How a request flows</h2>
+  <ol class="steps">
+    <li><b>Chairman → CEO.</b> You send a message. The CEO is the only entry point.</li>
+    <li><b>CEO routes to a department.</b> Picks the one that fits (creates a new one if none do).</li>
+    <li><b>Head routes to a role.</b> Reuses a fitting role — or <b>hires</b> a new one.</li>
+    <li><b>Role executes</b> using its skills, and accumulates memory for next time.</li>
+    <li><b>Results bubble up:</b> head reviews → CEO consolidates → you get one summary.</li>
+  </ol>
+
+  <h2><span class="num">03</span>The hiring model</h2>
+  <p>Coverage grows on demand without bloat. Who can create what:</p>
+  <table>
+    <tr><th>Actor</th><th>Can create</th></tr>
+    <tr><td>Chairman / devs</td><td><b>Skills</b> — real capabilities, never self-minted by agents</td></tr>
+    <tr><td>CEO</td><td><b>Departments</b></td></tr>
+    <tr><td>Department head</td><td><b>Roles</b> inside its own department</td></tr>
+  </table>
+  <div class="card">
+    <b>Hire protocol</b> (run by a department head)
+    <div class="flow" style="margin-top:12px">
+      <span class="node">SCAN</span><span class="arrow">→</span>
+      <span class="node">MATCH</span><span class="arrow">→</span>
+      <span class="node alt">HIRE</span><span class="arrow">→</span>
+      <span class="node alt">APPEND</span><span class="arrow">→</span>
+      <span class="node">LOG</span>
+    </div>
+    <p class="muted" style="margin-bottom:0">
+      Read each role’s one-line description → can someone do this? If yes, reuse.
+      If no, write a prompt + pick existing skills, append to the roster, and tell
+      the Chairman. <b>No automatic firing</b> — crowded rosters get a manual review.
+    </p>
+  </div>
+
+  <h2><span class="num">04</span>The roster</h2>
+  <div class="grid two">
+    <div class="card">
+      <div class="stat"><div><div class="n">6</div><div class="l">seed departments</div></div>
+        <div><div class="n">11</div><div class="l">seed roles</div></div></div>
+      <p class="muted" style="margin-bottom:0">Ships in the box. Deliberately tiny — the rest is hired on demand.</p>
+    </div>
+    <div class="card">
+      <div class="stat"><div><div class="n">20</div><div class="l">catalog departments</div></div>
+        <div><div class="n">155</div><div class="l">reference roles</div></div></div>
+      <p class="muted" style="margin-bottom:0">A map the system hires from — <b>not a cap</b>. It can create roles outside it.</p>
+    </div>
+  </div>
+
+  <p style="margin-top:18px"><b>Seed team:</b></p>
+  <table>
+    <tr><th>Department</th><th>Head</th><th>Roles</th></tr>
+    <tr><td>Executive</td><td>CEO</td><td>CEO</td></tr>
+    <tr><td>Engineering</td><td>Tech Lead</td><td>Tech Lead, Developer</td></tr>
+    <tr><td>Product &amp; Design</td><td>UX/UI Designer</td><td>UX/UI Designer</td></tr>
+    <tr><td>Creative</td><td>Art Director</td><td>Art Director, Graphic Designer, Manga Writer, Illustrator</td></tr>
+    <tr><td>Finance</td><td>Finance Expert</td><td>Finance Expert, Economist</td></tr>
+    <tr><td>Esoteric</td><td>Fortune Teller</td><td>Fortune Teller</td></tr>
+  </table>
+
+  <details>
+    <summary>Knowledge catalog — 20 departments it can hire from</summary>
+    <p class="muted" style="margin-top:8px">
+      Engineering &amp; Technology · Data, AI &amp; Research · Product &amp; Design ·
+      Creative &amp; Content · Marketing &amp; Growth · Sales &amp; BD ·
+      Finance, Economics &amp; Investing · Legal, Compliance &amp; Risk ·
+      Operations &amp; Supply Chain · People / HR · Customer &amp; Support ·
+      Strategy &amp; Consulting · Physical Science &amp; Engineering ·
+      Health, Medicine &amp; Wellness · Education &amp; Knowledge ·
+      Humanities &amp; Social Sciences · Arts, Culture &amp; Entertainment ·
+      Lifestyle &amp; Personal · Esoteric &amp; Spiritual · Trades &amp; Practical
+    </p>
+  </details>
+
+  <h2><span class="num">05</span>Architecture &amp; stack</h2>
+  <p>A <b>two-layer hierarchy</b> over the Codex SDK — the mapping is 1:1, so almost no orchestration is hand-written:</p>
+  <table>
+    <tr><th>Orchestra</th><th>Maps to (Codex SDK)</th></tr>
+    <tr><td>CEO</td><td>The top-level agent loop</td></tr>
+    <tr><td>Head &amp; role</td><td>A Codex agent instance (system prompt + tool allowlist)</td></tr>
+    <tr><td>Skill</td><td>A tool the agent may call</td></tr>
+    <tr><td>Role definition</td><td>Data in <code>orchestra.json</code></td></tr>
+    <tr><td>Role memory</td><td>A per-role memory file</td></tr>
+  </table>
+  <p style="margin-top:14px"><b>Stack:</b></p>
+  <div>
+    <span class="pill">TypeScript · Node ≥ 20</span>
+    <span class="pill">Codex SDK</span>
+    <span class="pill">OpenAI models — stronger for CEO/heads, faster for workers</span>
+    <span class="pill">Flat-file storage (JSON + memory)</span>
+    <span class="pill">React + Vite chat UI</span>
+    <span class="pill">validate.py</span>
+  </div>
+  <p style="margin-top:14px"><b>Deliberately skipped</b> (until something forces it):</p>
+  <div>
+    <span class="pill skip">no database</span>
+    <span class="pill skip">no vector search for hiring</span>
+    <span class="pill skip">no auth / multi-tenant</span>
+    <span class="pill skip">no message queue</span>
+    <span class="pill skip">no auto-firing / TTL</span>
+    <span class="pill skip">no frontend state library</span>
+  </div>
+
+  <h2><span class="num">06</span>Why hierarchy beats a flat roster</h2>
+  <p>
+    The CEO chooses among ~20 <b>departments</b>, not ~150 roles. Routing is
+    <code>O(departments)</code> then <code>O(roles in one department)</code> —
+    never <code>O(everyone)</code>. That is the whole reason coverage can grow
+    without the routing problem blowing up. Definitions are <b>data, not code</b>,
+    so the system can hire into itself at runtime by appending JSON.
+  </p>
+
+  <footer>
+    Orchestra · early stage — roster, hiring protocol &amp; validator are runnable today; the agent runtime is next.<br>
+    Full details in <code>README.md</code> · <code>HIRING.md</code> · <code>orchestra.json</code>
+  </footer>
+
+</div>
+</body>
+</html>

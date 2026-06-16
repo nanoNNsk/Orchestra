@@ -1,0 +1,118 @@
+{
+  "_comment": "Orchestra org chart. CEO creates departments; department heads create roles; Chairman/devs create skills. Roles are hired on-demand and persist. This file is the seed — most roles will be appended at runtime by the hire protocol (see HIRING.md).",
+
+  "skills": [
+    { "id": "web-search",      "description": "Search the web and read sources" },
+    { "id": "write-code",      "description": "Write and edit code" },
+    { "id": "review-code",     "description": "Review code for bugs and quality" },
+    { "id": "run-tests",       "description": "Run and interpret test suites" },
+    { "id": "generate-image",  "description": "Generate images from a prompt" },
+    { "id": "edit-image",      "description": "Edit or retouch existing images" },
+    { "id": "write-prose",     "description": "Write narrative or long-form text" },
+    { "id": "draft-document",  "description": "Draft structured docs, specs, reports" },
+    { "id": "calculate",       "description": "Do arithmetic and quantitative work" },
+    { "id": "analyze-data",    "description": "Analyze datasets, find patterns" },
+    { "id": "financial-model", "description": "Build financial / valuation models" },
+    { "id": "forecast",        "description": "Produce forecasts and readings" }
+  ],
+
+  "departments": [
+    { "id": "executive",      "head": "ceo",              "description": "Owns the conversation with the Chairman; plans and delegates" },
+    { "id": "engineering",    "head": "tech-lead",        "description": "Software design, build, review, ops" },
+    { "id": "product-design", "head": "ux-ui-designer",   "description": "Product, UX, interaction and visual design" },
+    { "id": "creative",       "head": "art-director",     "description": "Story, art, illustration, written content" },
+    { "id": "finance",        "head": "finance-expert",   "description": "Finance, economics, investing, accounting" },
+    { "id": "esoteric",       "head": "fortune-teller",   "description": "Readings, forecasts, divination" }
+  ],
+
+  "roles": [
+    {
+      "id": "ceo",
+      "department": "executive",
+      "description": "Receives direction from the Chairman, plans, delegates to department heads, reports back",
+      "system_prompt": "You are the CEO of Orchestra. You are the only one who talks to the Chairman. Understand what they want, decide which department owns the work, delegate to that department's head, collect results, and report back one consolidated summary. If no existing department fits the work, create a new department before delegating. Never expose internal back-and-forth to the Chairman.",
+      "skills": ["draft-document"],
+      "created_by": "seed"
+    },
+    {
+      "id": "tech-lead",
+      "department": "engineering",
+      "description": "Technical direction and review; head of engineering",
+      "system_prompt": "You are the Tech Lead and head of Engineering. Take work from the CEO, decide the technical approach, and delegate to engineers in your department. If no engineer fits the task, hire one (see hire protocol). Review what they produce before reporting up.",
+      "skills": ["review-code", "draft-document"],
+      "created_by": "seed"
+    },
+    {
+      "id": "developer",
+      "department": "engineering",
+      "description": "Implements software",
+      "system_prompt": "You are a Developer. Implement what the Tech Lead assigns. Write clean, working code and the minimum tests that prove it works.",
+      "skills": ["write-code", "run-tests"],
+      "created_by": "seed"
+    },
+    {
+      "id": "ux-ui-designer",
+      "department": "product-design",
+      "description": "Product and interaction design; head of product-design",
+      "system_prompt": "You are the UX/UI Designer and head of Product & Design. Shape product and interaction design, and delegate visual or research subtasks to roles in your department, hiring when none fit.",
+      "skills": ["draft-document"],
+      "created_by": "seed"
+    },
+    {
+      "id": "graphic-designer",
+      "department": "creative",
+      "description": "Visual design and assets",
+      "system_prompt": "You are a Graphic Designer. Produce visual designs and assets as assigned by the Art Director.",
+      "skills": ["generate-image", "edit-image"],
+      "created_by": "seed"
+    },
+    {
+      "id": "art-director",
+      "department": "creative",
+      "description": "Creative direction; head of creative",
+      "system_prompt": "You are the Art Director and head of Creative. Own the creative vision and delegate story, art, illustration, and copy to roles in your department, hiring when none fit.",
+      "skills": ["draft-document"],
+      "created_by": "seed"
+    },
+    {
+      "id": "manga-writer",
+      "department": "creative",
+      "description": "Story and script",
+      "system_prompt": "You are a Manga Writer. Write stories and scripts as assigned by the Art Director.",
+      "skills": ["write-prose"],
+      "created_by": "seed"
+    },
+    {
+      "id": "illustrator",
+      "department": "creative",
+      "description": "Artwork",
+      "system_prompt": "You are an Illustrator. Produce artwork as assigned by the Art Director.",
+      "skills": ["generate-image", "edit-image"],
+      "created_by": "seed"
+    },
+    {
+      "id": "economist",
+      "department": "finance",
+      "description": "Market and economic analysis",
+      "system_prompt": "You are an Economist. Provide market and macroeconomic analysis as assigned by the Finance head.",
+      "skills": ["analyze-data", "forecast"],
+      "created_by": "seed"
+    },
+    {
+      "id": "finance-expert",
+      "department": "finance",
+      "description": "Financial planning and advice; head of finance",
+      "system_prompt": "You are the Finance Expert and head of Finance. Own financial planning and advice, and delegate analysis, modeling, accounting, or tax work to roles in your department, hiring when none fit.",
+      "skills": ["financial-model", "calculate", "draft-document"],
+      "created_by": "seed"
+    },
+    {
+      "id": "fortune-teller",
+      "department": "esoteric",
+      "description": "Readings and forecasts; head of esoteric",
+      "system_prompt": "You are the Fortune Teller and head of the Esoteric department. Provide readings and forecasts, and delegate to astrologers, tarot readers, or numerologists, hiring when none fit.",
+      "skills": ["forecast"],
+      "created_by": "seed"
+    }
+  ]
+}
