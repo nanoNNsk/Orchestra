@@ -365,7 +365,7 @@ deliberately 1:1 so almost no orchestration has to be hand-written:
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│  Chat UI  (React + Vite)                                      │
+│  Chat UI  (static HTML, served by Node http)                  │
 │    └── one conversation, with the CEO                         │
 └───────────────────────────────┬──────────────────────────────┘
                                  │  HTTP / stream
@@ -413,7 +413,7 @@ deliberately 1:1 so almost no orchestration has to be hand-written:
 | **Agent runtime** | Codex SDK | The agent loop and tools map 1:1 to role / skill / CEO. No custom orchestration engine to build or maintain. |
 | **Models** | OpenAI models via Codex — a stronger model for CEO & heads, a faster/cheaper one for worker roles | Match model cost to the reasoning each role actually needs. |
 | **Storage** | Flat files — `orchestra.json` (roster) + `memory/<role>.md` (per-role memory) | Zero infra. The roster is small structured data; memory is append-friendly text. |
-| **Frontend** | React + Vite, single-page chat | One conversation with the CEO. A chat box does not need a heavy framework. |
+| **Frontend** | Single static HTML page, served by Node's built-in `http` | One conversation with the CEO needs no framework or build step. Swap in React + Vite only if the UI grows. |
 | **Roster validation** | `validate.py` (zero-dependency Python) | A standalone integrity check, runnable in any CI without the Node toolchain. |
 
 ### Deliberately **not** in the stack (yet)
@@ -494,48 +494,99 @@ orchestra/
 ├── HIRING.md          ← the full hiring protocol
 ├── orchestra.json     ← the org chart: skills, departments, roles (seed)
 ├── validate.py        ← roster integrity check
-└── (planned)
-    ├── src/           ← TypeScript server + Codex SDK wiring
-    ├── web/           ← React + Vite chat UI
-    └── memory/        ← per-role memory files, created at runtime
+├── package.json       ← deps (@openai/codex-sdk) and scripts
+├── src/
+│   ├── run.mjs        ← CEO loop: orchestrate(message) + CLI entrypoint
+│   ├── agent.mjs      ← Codex SDK wrapper + skill→tool mapping
+│   ├── roster.mjs     ← load/save orchestra.json
+│   ├── hire.mjs       ← HIRE + APPEND steps, re-validates after writing
+│   ├── memory.mjs     ← per-role memory load/append
+│   ├── review.mjs     ← roster-review (flags overlapping roles)
+│   └── *.test.mjs     ← self-checks for hire and memory
+├── web/
+│   ├── chat.html      ← single-page chat UI + Company panel
+│   └── chat.test.mjs  ← jsdom check for the UI (history, toast, badge)
+└── memory/            ← per-role memory files, created at runtime (gitignored)
 ```
 
 ---
 
 ## Getting started
 
-> **Heads up:** Orchestra is early-stage. The roster, hiring protocol, and
-> validator are real and runnable today; the server and UI are not yet
-> implemented. What works now:
+Auth comes from the Codex CLI (`codex login`) — no API key needed.
 
 ```bash
-# Validate the seed org chart
-python3 validate.py
+npm install            # installs @openai/codex-sdk
+
+python3 validate.py    # check the org chart
+
+# Ask the company something (CLI):
+node src/run.mjs "Give me a 3-bullet inflation outlook for a small business."
+
+# Or chat in the browser:
+npm start              # → http://localhost:4567
+
+# Full roster (departments, roles, each role's skills):
+npm run status
+
+# Run the test suite (validate + hire + memory + chat UI):
+npm test
 ```
 
-The runtime (`src/`, `web/`) is the next milestone — see the roadmap.
+### The chat app
+
+`npm start` opens a chat with the CEO. Beyond the conversation it has:
+
+- **🏛 Company panel** (toggle, top-right) — a live, read-only view of the
+  org chart: role/department/skill counts, and a department → role → skill
+  drill-down. Click a skill to see its description and which other roles share
+  it. When a request causes a **new hire**, the role pops in with a 🆕 badge
+  and a toast — you watch the company grow.
+- **Conversation history** — your chat is saved in the browser and survives a
+  refresh. **Clear** empties your view only; it does **not** wipe the company's
+  per-role memory (those are different layers by design).
+
+The panel is read-only on purpose — you talk to the CEO, you don't manage the
+roster from the UI. Roster maintenance stays a CLI action (`npm run status`).
 
 ---
 
 ## Roadmap
 
+**Sprint S1 — "First Real Reply" (shipped):** a Chairman request routes through
+CEO → department head → role and returns one consolidated reply, on the Codex SDK.
+
 - [x] Org-chart data model (`orchestra.json`)
 - [x] Hiring protocol (`HIRING.md`)
 - [x] Roster validator (`validate.py`)
-- [ ] CEO loop + department/role agents on the Codex SDK
-- [ ] Skill → tool wiring for the seed skills
-- [ ] On-demand hiring that appends to `orchestra.json` at runtime
-- [ ] Per-role memory persistence
-- [ ] React + Vite chat UI
-- [ ] Roster-review command for manual consolidation
+- [x] CEO loop + department/role agents on the Codex SDK
+- [x] Skill → tool wiring for the seed skills
+- [x] On-demand hiring that appends to `orchestra.json` at runtime
+- [x] Per-role memory persistence
+- [x] Chat UI (plain HTML + Node `http` server)
+- [x] Roster-review command for manual consolidation
+
+**Sprint S2 — "See the Company" (shipped):** the chat app shows a live, read-only
+view of the org chart and remembers the conversation.
+
+- [x] `GET /roster` endpoint
+- [x] Company drawer — counts + department → role → skill drill-down (read-only)
+- [x] Skill reverse index (which roles share a skill)
+- [x] New-hire badge + toast (the company grows on screen)
+- [x] Conversation history in localStorage + Clear
+
+**Next:** multi-conversation history · server-side chat persistence ·
+CEO-creates-department routing · streaming responses · multi-role requests ·
+memory compaction.
 
 ---
 
 ## Status
 
-Early stage. This document describes the project's goal, design, and intended
-architecture; the agent runtime is in progress. Interfaces and roster are
-expected to change.
+Working vertical slice. The org chart runs end to end on the Codex SDK: routing,
+reuse-or-hire, per-role memory, and a chat UI all function. Built for a single
+Chairman with file-based storage — see the "deliberately not in the stack" list
+for what is intentionally deferred. Interfaces and roster are still expected to change.
 
 ---
 

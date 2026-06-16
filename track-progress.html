@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orchestra — Sprint S1 Progress</title>
+<style>
+  :root {
+    --bg:#0f1117; --card:#181b24; --line:#272b36; --ink:#e6e8ee; --dim:#9aa0ad;
+    --todo:#3a3f4d; --doing:#d8a64a; --done:#57d9a3; --p0:#7c9cff; --p2:#6a7180;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.6 -apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:780px;margin:0 auto;padding:40px 22px 70px;}
+  h1{font-size:1.9rem;margin:0 0 2px;letter-spacing:-.02em;}
+  .sub{color:var(--dim);margin:0 0 22px;}
+  .goal{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--p0);
+    border-radius:10px;padding:12px 16px;margin:0 0 22px;color:#d3d7e0;font-size:.95rem;}
+
+  .barwrap{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:8px;}
+  .barrow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+  .pct{font-size:1.8rem;font-weight:800;color:var(--done);line-height:1;}
+  .bartrack{height:12px;background:#11141c;border-radius:99px;overflow:hidden;border:1px solid var(--line);}
+  .barfill{height:100%;background:linear-gradient(90deg,var(--p0),var(--done));width:0;transition:width .3s;}
+  .counts{color:var(--dim);font-size:.85rem;margin-top:8px;}
+
+  h2{font-size:1.05rem;margin:26px 0 8px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
+  .item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;user-select:none;transition:border-color .15s;}
+  .item:hover{border-color:#3a4150;}
+  .dot{width:18px;height:18px;border-radius:50%;flex:0 0 auto;background:var(--todo);border:2px solid #4a5160;}
+  .item.doing .dot{background:var(--doing);border-color:var(--doing);}
+  .item.done  .dot{background:var(--done);border-color:var(--done);}
+  .txt{flex:1;}
+  .item.done .txt{color:var(--dim);text-decoration:line-through;}
+  .tag{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:99px;letter-spacing:.03em;}
+  .tag.P0{background:#202a48;color:#9db4ff;}
+  .tag.P1{background:#243a32;color:#7fe3bc;}
+  .tag.P2{background:#23262f;color:var(--p2);}
+  .est{color:var(--dim);font-size:.8rem;min-width:34px;text-align:right;}
+  .status{font-size:.72rem;color:var(--dim);min-width:74px;text-align:right;text-transform:uppercase;letter-spacing:.04em;}
+
+  .legend{display:flex;gap:18px;flex-wrap:wrap;color:var(--dim);font-size:.85rem;margin:18px 0 4px;}
+  .legend b{color:var(--ink);font-weight:600;}
+  .legend .d{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+  .hint{color:var(--dim);font-size:.85rem;margin-top:18px;}
+  button.reset{background:transparent;border:1px solid var(--line);color:var(--dim);
+    border-radius:8px;padding:6px 12px;cursor:pointer;font-size:.82rem;margin-top:14px;}
+  button.reset:hover{color:var(--ink);border-color:#3a4150;}
+  footer{margin-top:40px;color:var(--dim);font-size:.85rem;text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>🎻 Orchestra — Sprint S2</h1>
+  <p class="sub">"See the Company" · 16–18 Jun 2026 · solo · <span style="color:var(--done)">S1 shipped</span></p>
+  <div class="goal"><b>Goal:</b> in the chat app the Chairman can see the company — role count,
+    who they are, what each can do — and the conversation survives a refresh. New hires appear live.</div>
+
+  <div class="barwrap">
+    <div class="barrow"><span><b>S2 progress</b> <span style="color:var(--dim);font-size:.85rem">(P0 + P1)</span></span><span class="pct" id="pct">0%</span></div>
+    <div class="bartrack"><div class="barfill" id="fill"></div></div>
+    <div class="counts" id="counts"></div>
+  </div>
+
+  <div class="legend">
+    <span><span class="d" style="background:var(--todo)"></span><b>To do</b></span>
+    <span><span class="d" style="background:var(--doing)"></span><b>In progress</b></span>
+    <span><span class="d" style="background:var(--done)"></span><b>Done</b></span>
+    <span style="margin-left:auto">click a row to cycle status</span>
+  </div>
+
+  <h2>Sprint S2 — See the Company (active)</h2>
+  <div id="s2"></div>
+
+  <h2>Sprint S1 — First Real Reply (shipped)</h2>
+  <div id="s1"></div>
+
+  <h2>Shipped before the sprints</h2>
+  <div id="pre"></div>
+
+  <button class="reset" onclick="resetAll()">Reset all</button>
+
+  <footer>Status saved in your browser (localStorage). Plan lives in <code>planing.md</code>.</footer>
+</div>
+
+<script>
+// Source of truth = this file. Bump VERSION whenever statuses are edited here;
+// a changed VERSION discards any older state saved in the visitor's browser.
+const VERSION = 10;
+
+// id, label, priority, estimate, status(todo|doing|done)
+const PRE = [
+  ["m-data",   "Org-chart data model (orchestra.json)", "", "", "done"],
+  ["m-hire",   "Hiring protocol (HIRING.md)", "", "", "done"],
+  ["m-valid",  "Roster integrity validator (validate.py)", "", "", "done"],
+];
+const S1 = [
+  ["s-spike",  "Spike: Codex SDK hello-world (one loop, send/reply)", "P0", "0.5d", "done"],
+  ["s-ceo",    "CEO loop: Chairman → CEO → reply (no routing yet)",   "P0", "1d",   "done"],
+  ["s-role",   "Load orchestra.json → configure a Codex agent from a role", "P0", "1d", "done"],
+  ["s-skill",  "Skill→tool wiring for a minimal subset",              "P0", "1d",   "done"],
+  ["s-route",  "Route CEO → head → role (reuse only), consolidated summary", "P0", "1.5d", "done"],
+  ["s-hire",   "On-demand hiring: append role + re-validate",         "P1", "1d",   "done"],
+  ["s-mem",    "Per-role memory: load/save memory/<role>.md",         "P1", "1d",   "done"],
+  ["s-ui",     "Chat UI — server + web/chat.html (stretch)",           "P2", "1.5d", "done"],
+  ["s-review", "Roster-review command (stretch)",                      "P2", "0.5d", "done"],
+];
+const S2 = [
+  ["s2-roster",  "GET /roster endpoint — serve roster summary as JSON",        "P0", "0.5d",  "done"],
+  ["s2-drawer",  "Company drawer — collapsed toggle, headline counts, read-only", "P0", "0.5d", "done"],
+  ["s2-zoom",    "Drawer disclosure: department → role → skill (3 zoom levels)", "P0", "0.75d", "done"],
+  ["s2-history", "Conversation history in localStorage + Clear button",        "P0", "0.5d",  "done"],
+  ["s2-revidx",  "Skill reverse index — click skill → roles that have it",      "P1", "0.25d", "done"],
+  ["s2-hire",    "Hire event — 🆕 badge + toast; refresh drawer after reply",   "P1", "0.5d",  "done"],
+  ["s2-multi",   "Multi-conversation list (stretch)",                           "P2", "1d",    "todo"],
+  ["s2-server",  "Server-side conversation persistence (stretch)",              "P2", "1d",    "todo"],
+  ["s2-skldet",  "Richer skill descriptions / panel search (stretch)",          "P2", "0.5d",  "todo"],
+];
+const ORDER = ["todo","doing","done"];
+const LABEL = {todo:"To do", doing:"In progress", done:"Done"};
+const ACTIVE = S2; // progress bar tracks the active sprint
+
+const fileDefaults = {};
+[...PRE, ...S1, ...S2].forEach(([id,,,,st]) => fileDefaults[id] = st || "todo");
+
+const saved = JSON.parse(localStorage.getItem("orchestra-track") || "{}");
+// File wins on version bump; otherwise the visitor's own toggles persist.
+let state = (saved.v === VERSION) ? saved.state : {...fileDefaults};
+
+function save(){ localStorage.setItem("orchestra-track", JSON.stringify({v:VERSION, state})); }
+
+function row(item, container){
+  const [id,label,pri,est] = item;
+  const st = state[id] || "todo";
+  const el = document.createElement("div");
+  el.className = "item " + st;
+  el.innerHTML =
+    `<span class="dot"></span>
+     <span class="txt">${label}</span>
+     ${pri ? `<span class="tag ${pri}">${pri}</span>` : ""}
+     ${est ? `<span class="est">${est}</span>` : ""}
+     <span class="status">${LABEL[st]}</span>`;
+  el.onclick = () => {
+    const next = ORDER[(ORDER.indexOf(state[id]||"todo")+1) % 3];
+    state[id] = next; save(); render();
+  };
+  container.appendChild(el);
+}
+
+function render(){
+  for (const [id, items] of [["s2", S2], ["s1", S1], ["pre", PRE]]) {
+    const box = document.getElementById(id); box.innerHTML = "";
+    items.forEach(i => row(i, box));
+  }
+
+  // progress = active sprint, P0+P1 only (P2 is overflow, not part of the commitment)
+  const counted = ACTIVE.filter(([,,p]) => p === "P0" || p === "P1");
+  const done = counted.filter(([id]) => state[id] === "done").length;
+  const doing = counted.filter(([id]) => state[id] === "doing").length;
+  const pct = Math.round(done / counted.length * 100);
+  document.getElementById("pct").textContent = pct + "%";
+  document.getElementById("fill").style.width = pct + "%";
+  document.getElementById("counts").textContent =
+    `${done} done · ${doing} in progress · ${counted.length - done - doing} to do  —  of ${counted.length} committed items (P2 stretch excluded)`;
+}
+
+function resetAll(){
+  if (!confirm("Reset to the statuses saved in this file?")) return;
+  state = {...fileDefaults}; save(); render();
+}
+
+render();
+</script>
+</body>
+</html>

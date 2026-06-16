@@ -1,0 +1,20 @@
+{
+  "name": "orchestra",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Chat with an AI company, not a chatbot.",
+  "scripts": {
+    "validate": "python3 validate.py",
+    "status": "node src/review.mjs",
+    "start": "node src/server.mjs",
+    "ask": "node src/run.mjs",
+    "test": "python3 validate.py && node src/hire.test.mjs && node src/memory.test.mjs && node web/chat.test.mjs"
+  },
+  "dependencies": {
+    "@openai/codex-sdk": "^0.140.0"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

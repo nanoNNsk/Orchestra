@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orchestra — คู่มือใช้งาน</title>
+<style>
+  :root{--bg:#0f1117;--card:#181b24;--line:#272b36;--ink:#e6e8ee;--dim:#9aa0ad;--accent:#7c9cff;--accent2:#57d9a3;--warn:#ffb86b;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.7 -apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:780px;margin:0 auto;padding:44px 22px 90px;}
+  header{text-align:center;margin-bottom:10px;}
+  h1{font-size:2.2rem;margin:0 0 4px;letter-spacing:-.02em;}
+  .tag{color:var(--dim);}
+  h2{font-size:1.25rem;margin:38px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+  h2 .n{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;
+    background:var(--accent);color:#0f1117;font-size:.9rem;font-weight:800;margin-right:10px;vertical-align:middle;}
+  p{color:#d3d7e0;}
+  b,strong{color:#fff;}
+  a{color:var(--accent);}
+  code.inl{background:#222632;color:var(--accent2);padding:1px 6px;border-radius:5px;font-size:.88em;
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;}
+  .cmd{position:relative;background:#0c0e14;border:1px solid var(--line);border-radius:10px;
+    padding:13px 50px 13px 16px;margin:10px 0;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+    font-size:.9rem;color:#e6e8ee;cursor:pointer;white-space:pre-wrap;word-break:break-all;}
+  .cmd:hover{border-color:var(--accent);}
+  .cmd::before{content:"$";color:var(--dim);margin-right:10px;user-select:none;}
+  .cmd .cp{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:.72rem;
+    color:var(--dim);border:1px solid var(--line);border-radius:6px;padding:3px 8px;}
+  .cmd:hover .cp{color:var(--accent);border-color:var(--accent);}
+  .cmd.copied .cp{color:#0f1117;background:var(--accent2);border-color:var(--accent2);}
+  .hero{background:linear-gradient(180deg,#1a2030,#141823);border:1px solid #2f3a5c;border-radius:14px;
+    padding:20px 22px;margin:14px 0;}
+  .hero b{color:var(--accent);}
+  .step{color:var(--dim);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;margin-top:14px;}
+  table{width:100%;border-collapse:collapse;margin:10px 0;}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{color:var(--accent);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;}
+  td code{background:#222632;color:var(--accent2);padding:1px 6px;border-radius:5px;font-size:.85em;
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;white-space:nowrap;}
+  .note{background:var(--card);border-left:3px solid var(--warn);border-radius:8px;padding:11px 15px;margin:10px 0;font-size:.92rem;color:#d3d7e0;}
+  .ok{border-left-color:var(--accent2);}
+  ul{padding-left:20px;} li{margin:4px 0;color:#d3d7e0;}
+  footer{margin-top:48px;text-align:center;color:var(--dim);font-size:.85rem;}
+  .hint{text-align:center;color:var(--dim);font-size:.82rem;margin-top:-2px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>🎻 Orchestra — คู่มือใช้งาน</h1>
+    <div class="tag">คุยกับ "บริษัท AI" ทั้งบริษัท ไม่ใช่บอตตัวเดียว</div>
+  </header>
+  <p class="hint">💡 คลิกที่กล่องคำสั่งสีดำเพื่อ <b>คัดลอก</b> ได้เลย</p>
+
+  <div class="hero">
+    <b>อยากเริ่มเร็วสุด?</b> ทำ 3 ขั้นนี้พอ — เปิดแชทได้ใน 1 นาที
+    <div class="step">1 · เข้าโฟลเดอร์โปรเจกต์</div>
+    <div class="cmd" data-cmd="cd path/to/orchestra">cd path/to/orchestra<span class="cp">copy</span></div>
+    <div class="step">2 · ติดตั้ง (ทำครั้งเดียว)</div>
+    <div class="cmd" data-cmd="npm install">npm install<span class="cp">copy</span></div>
+    <div class="step">3 · เปิดแชท</div>
+    <div class="cmd" data-cmd="npm start">npm start<span class="cp">copy</span></div>
+    <p style="margin:12px 0 0">แล้วเปิดเบราว์เซอร์ไปที่ <a href="http://localhost:4567">http://localhost:4567</a> — จบ ✅</p>
+  </div>
+
+  <h2><span class="n">0</span>สิ่งที่ต้องมีก่อน</h2>
+  <ul>
+    <li><b>Node.js</b> เวอร์ชัน 20 ขึ้นไป — เช็คด้วย <code class="inl">node -v</code></li>
+    <li><b>Codex CLI ที่ล็อกอินแล้ว</b> (ตัว AI ขับด้วยอันนี้ ไม่ต้องใช้ API key) — เช็คด้วย <code class="inl">codex login status</code> ควรขึ้น <i>Logged in</i></li>
+    <li><b>Python 3</b> — ใช้แค่ตอนตรวจ roster (<code class="inl">npm run validate</code>)</li>
+  </ul>
+  <div class="note">ถ้า <code class="inl">codex login status</code> ไม่ขึ้นว่า logged in ให้รัน <code class="inl">codex login</code> ก่อน ไม่งั้นแชทจะตอบไม่ได้</div>
+
+  <h2><span class="n">1</span>เปิดแชท (ทางหลัก)</h2>
+  <div class="cmd" data-cmd="npm start">npm start<span class="cp">copy</span></div>
+  <p>จะขึ้นข้อความ <code class="inl">Orchestra chat → http://localhost:4567</code> แล้วเปิดลิงก์นั้นในเบราว์เซอร์</p>
+  <p><b>วิธีใช้หน้าแชท:</b></p>
+  <ul>
+    <li>พิมพ์บอก <b>CEO</b> ว่าต้องการอะไร แล้วกด Send — ตอบไทยหรืออังกฤษก็ได้</li>
+    <li>จะเห็น <b>trace</b> ว่างานถูกส่งไปแผนกไหน/ใครทำ ก่อนคำตอบสรุป</li>
+    <li>ปุ่ม <b>🏛 Company</b> (มุมขวาบน) เปิดดูผังบริษัทสดๆ — กดไล่ แผนก → role → skill ได้</li>
+    <li>แชทถูกเซฟอัตโนมัติ <b>refresh แล้วไม่หาย</b> · ปุ่ม <b>Clear</b> ล้างเฉพาะหน้าจอคุณ (บริษัทยังจำงานเก่าได้)</li>
+    <li>ถ้ามีงานที่ไม่มีใครทำได้ บริษัทจะ <b>จ้างคนใหม่</b> ให้เห็น 🆕 เด้งใน panel</li>
+  </ul>
+  <div class="note">ปิด server: กลับไปที่หน้าต่าง terminal แล้วกด <code class="inl">Ctrl + C</code> · แต่ละคำถามใช้เวลา ~20–60 วินาที (ยิง AI หลายรอบ)</div>
+
+  <h2><span class="n">2</span>คำสั่งทั้งหมด</h2>
+  <table>
+    <tr><th>คำสั่ง</th><th>ทำอะไร</th></tr>
+    <tr><td><code>npm start</code></td><td>เปิดหน้าแชทในเบราว์เซอร์ (ทางหลัก)</td></tr>
+    <tr><td><code>npm run status</code></td><td>ดูผังบริษัทใน terminal — แผนก, role, skill ของแต่ละ role</td></tr>
+    <tr><td><code>npm run ask "..."</code></td><td>ถามผ่าน command line ไม่ต้องเปิดเบราว์เซอร์</td></tr>
+    <tr><td><code>npm run validate</code></td><td>ตรวจว่า roster ถูกต้อง (role/skill/แผนก ครบไหม)</td></tr>
+    <tr><td><code>npm test</code></td><td>รันชุดทดสอบทั้งหมด (validate + hire + memory + chat UI)</td></tr>
+  </table>
+  <p>ตัวอย่างถามผ่าน command line:</p>
+  <div class="cmd" data-cmd='npm run ask "ขอไอเดียชื่อร้านกาแฟ 5 ชื่อ"'>npm run ask "ขอไอเดียชื่อร้านกาแฟ 5 ชื่อ"<span class="cp">copy</span></div>
+
+  <h2><span class="n">3</span>เช็คว่าตอนนี้มี role / skill อะไรบ้าง</h2>
+  <div class="cmd" data-cmd="npm run status">npm run status<span class="cp">copy</span></div>
+  <p>โชว์ทุกแผนก ทุก role พร้อม skill ของแต่ละตัว และ tag <code class="inl">[hired by ...]</code> สำหรับคนที่จ้างมาทีหลัง — role ที่จ้างผ่านแชทจะ <b>อยู่ถาวร</b> เห็นได้จากคำสั่งนี้</p>
+
+  <h2><span class="n">4</span>แก้ปัญหาเบื้องต้น</h2>
+  <table>
+    <tr><th>อาการ</th><th>แก้ยังไง</th></tr>
+    <tr><td>หน้าเว็บขึ้น "ต่อ server ไม่ได้"</td><td>server ปิดอยู่ — รัน <code>npm start</code> ใหม่</td></tr>
+    <tr><td>แชทตอบ Error / ตอบไม่ได้</td><td>เช็ค <code>codex login status</code> ถ้าไม่ได้ล็อกอินให้รัน <code>codex login</code></td></tr>
+    <tr><td><code>port 4567 already in use</code></td><td>มี server เปิดค้างอยู่แล้ว — เปิดเบราว์เซอร์ใช้ได้เลย หรือกด <code>Ctrl+C</code> ตัวเก่าก่อน</td></tr>
+    <tr><td>อยากให้ roster กลับเป็นค่าเริ่มต้น</td><td>role ที่จ้างมาอยู่ใน <code>orchestra.json</code> — ลบ role นั้นออกแล้วรัน <code>npm run validate</code></td></tr>
+  </table>
+  <div class="note ok">ไฟล์คู่มืออื่นๆ: <code class="inl">README.md</code> (ภาพรวม+สถาปัตยกรรม) · <code class="inl">orchestra.html</code> (สรุปดีไซน์) · <code class="inl">track-progress.html</code> (ความคืบหน้างาน)</div>
+
+  <footer>Orchestra · เปิด <code class="inl">npm start</code> แล้วคุยกับบริษัทได้เลย 🎻</footer>
+</div>
+
+<script>
+// คลิกกล่องคำสั่งเพื่อคัดลอก
+document.querySelectorAll(".cmd").forEach(el => {
+  el.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(el.dataset.cmd);
+      el.classList.add("copied");
+      el.querySelector(".cp").textContent = "copied!";
+      setTimeout(() => { el.classList.remove("copied"); el.querySelector(".cp").textContent = "copy"; }, 1400);
+    } catch { /* clipboard ไม่ให้สิทธิ์ — ผู้ใช้คัดลอกเองได้ */ }
+  });
+});
+</script>
+</body>
+</html>
